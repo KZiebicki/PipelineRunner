@@ -39,16 +39,20 @@ The `commands.txt` file defines the list of programs to execute for each file. E
 - `{output}` refers to the output from the previous command.
 - If `UseLineFilterPrefix` is set, the application will use the prefixed line as `{output}` (without the prefix itself).
 
+- *Alternatively, `{<program>output}` can be used to reference the latest output from a specified program. For example, when using `pdfToImage.exe`, the corresponding output can be accessed with `{pdfToImageoutput}`. **Note:** This reference is case-sensitive.*
+
 ### **Example `commands.txt`**
 ```
 pdfToImage.exe {input}
 imageCompressor.exe {output}
 cloudUploader.exe {output}
+imageCompressorFileLog {imageCompressoroutput}
 ```
 This will:
 1. Convert a PDF to an image.
 2. Compress the image.
 3. Upload the compressed image to the cloud.
+4. Log the compressed image.
 
 ## **How It Works**
 1. The application scans `WatchDirectory` for files matching `FileSearchPattern`.
