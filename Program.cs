@@ -7,7 +7,7 @@ class Program
     static async Task Main()
     {
         Config config = LoadConfig();
-        ConfigureLogger(config.LogDirectory, config.MinimumLogLevel);
+        ConfigureLogger(config.LogDirectory, config.MinimumLogLevel, config.Seq);
 
         Log.Information("File processing service started.");
 
@@ -41,7 +41,7 @@ class Program
         return JsonSerializer.Deserialize<Config>(json) ?? throw new Exception("Failed to load configuration.");
     }
 
-    static void ConfigureLogger(string logDirectory, string? MinimumLevel = null)
+    static void ConfigureLogger(string logDirectory, string? MinimumLevel = null, Seq? seq = null)
     {
         Directory.CreateDirectory(logDirectory);
 
@@ -69,8 +69,12 @@ class Program
                 break;
         }
 
+        if (!string.IsNullOrEmpty(seq?.AppName))
+            loggerConfig.Enrich.WithProperty("Application", seq.AppName);
         loggerConfig.WriteTo.Console();
         loggerConfig.WriteTo.File(Path.Combine(logDirectory, "log-.txt"), rollingInterval: RollingInterval.Day);
+        if(!string.IsNullOrEmpty(seq?.ServerAddress))
+            loggerConfig.WriteTo.Seq(seq.ServerAddress);
         Log.Logger = loggerConfig.CreateLogger();
     }
 }

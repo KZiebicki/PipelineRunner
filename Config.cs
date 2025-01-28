@@ -11,5 +11,12 @@
         public int ProcessTimeoutSeconds { get; set; }
         public string? MinimumLogLevel { get; set; }
         public bool ContinueOnError { get; set; } = false;
+        public Seq? Seq { get; set; }
+    }
+
+    public class Seq
+    {
+        public string? ServerAddress { get; set; }
+        public string? AppName { get; set; }
     }
 }
